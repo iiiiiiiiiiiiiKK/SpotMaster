@@ -55,3 +55,28 @@
    ```bash
    git clone [https://github.com/您的用户名/pixel-trader.git](https://github.com/您的用户名/pixel-trader.git)
    cd pixel-trader
+
+ * 安装依赖
+   npm install
+
+ * 启动开发服务器
+   npm run dev
+
+⚙️ 配置说明
+为了开启云端存储功能，请在应用内的 LAB > Settings 中填入以下信息：
+| 配置项 | 说明 |
+|---|---|
+| Firebase Config | 您的 Firebase Web 项目配置对象 (JSON 格式) |
+| TG Bot Token | (可选) 用于推送交易提醒的 Telegram 机器人 Token |
+| Chat ID | (可选) 您的 Telegram 用户 ID |
+📸 界面预览
+| 资产看板 | 交易录入 | 作战室工具 |
+|---|---|---|
+|  |  |  |
+📜 许可证
+本项目采用 MIT License 开源协议。
+🤝 贡献与反馈
+如果您有更好的想法或发现了 BUG，欢迎提交 Pull Request 或开 Issue。
+> "Stay Humble, Stay Pixel." —— Pixel Trader 团队
+> 
+
