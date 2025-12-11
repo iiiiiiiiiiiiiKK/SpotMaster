@@ -1,5 +1,5 @@
 # 🕹️ Spot Master V3.3
-> **极简像素风格的硬核加密货币交易终端**
+> **极简像素风格的硬核现货管理终端**
 
 [![Vite](https://img.shields.io/badge/Framework-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/Library-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
