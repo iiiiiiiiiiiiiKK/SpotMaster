@@ -1268,7 +1268,7 @@ export default function PixelTraderV33_SmartConfig() {
             </div>
 
             <div className="flex gap-4 text-xs font-bold text-gray-600 overflow-hidden h-5 items-center">
-               <div className="bg-black text-white px-1 text-[10px]">KK</div>
+               <div className="bg-black text-white px-1 text-[6px]">KK</div>
                {sortedAssets.filter(a => a.marketValue > 0).slice(0, 4).map((asset, idx) => {
                   const percent = (asset.marketValue / totalStats.totalValue) * 100;
                   const color = getAssetColor(asset.symbol, idx);
