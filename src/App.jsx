@@ -374,7 +374,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                     // 👇 【外层容器】 w-12 控制这一列的宽度 (Width)
                     <div className="w-12 px-0.5 h-full flex items-center justify-center">
                         {/* 👇 【内层方块】 text-[10px] 控制手机端字号, sm:text-sm 控制电脑端字号 */}
-                        <div className="w-full rounded py-0.5 font-bold text-[10px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
+                        <div className="w-full rounded py-0.5 font-bold text-[12px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
                            {val !== undefined ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
                         </div>
                     </div>
@@ -1973,7 +1973,7 @@ export default function PixelTraderV34_PriceBoard() {
                            <span className="flex items-center gap-1"><Hash size={10}/>{asset.transactions.length} 次</span>
                         </div>
                         {/* NEW: Timeframe Percentage Row */}
-                        <div className="flex flex-wrap gap-3 text-xs font-bold mt-2">
+                        <div className="flex flex-wrap gap-3 text-10 font-bold mt-2">
                            <span className={getStatColor(stats.changePercent1h)}>H {renderStatVal(stats.changePercent1h)}</span>
                            <span className={getStatColor(stats.changePercent4h)}>4H {renderStatVal(stats.changePercent4h)}</span>
                            <span className={getStatColor(stats.changePercent24h)}>D {renderStatVal(stats.changePercent24h)}</span>
