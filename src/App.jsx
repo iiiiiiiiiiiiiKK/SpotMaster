@@ -373,7 +373,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 return (
                     // 👇 【外层容器】 w-12 控制这一列的宽度 (Width)
                     <div className="w-12 px-0.5 h-full flex items-center justify-center">
-                        {/* 👇 【内层方块】 text-[10px] 控制手机端字号, sm:text-sm 控制电脑端字号 */}
+                        {/* 👇 【内层方块】 text-[8px] 控制手机端字号, sm:text-sm 控制电脑端字号 */}
                         <div className="w-full rounded py-0.5 font-bold text-[12px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
                            {val !== undefined ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
                         </div>
