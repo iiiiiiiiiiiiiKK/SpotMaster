@@ -503,7 +503,7 @@ const PricePanel = ({ isDarkMode, onClose }) => {
       <div className={`flex items-center justify-between px-4 py-2 ${t.headerBg} flex-shrink-0`}>
         <div className="flex items-center gap-2">
            <BarChart3 size={20} />
-           <span className="font-bold text-sm sm:text-base">PRICE BOARD</span>
+           <span className="font-bold text-sm sm:text-base">SPOTDATE 推特@oAdam</span>
            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-500' : 'bg-green-500'} animate-pulse`}></div>
         </div>
         <button onClick={onClose} className={`pixel-btn w-8 h-8 flex items-center justify-center ${t.button}`}>
