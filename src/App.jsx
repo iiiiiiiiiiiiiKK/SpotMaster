@@ -301,7 +301,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
   };
 
   const SortIcon = ({ field }) => (
-    <span className={`ml-0.5 ${sortField !== field ? 'opacity-0' : ''}`}>{sortDirection === 'asc' ? 'â' : 'â'}</span>
+    <span className={`ml-0.5 ${sortField !== field ? 'opacity-0' : ''}`}>{sortDirection === 'asc' ? '↑' : '↓'}</span>
   );
 
   const handleExtLink = (e, type, symbol) => {
@@ -353,7 +353,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 // Removed hidden logic
                 const wrapperClass = `${isBoxed ? 'w-12' : (isFlex ? 'flex-1' : 'w-auto')} ${isLast ? 'pr-1.5' : 'px-0.5'} h-full flex items-center justify-end ${extraClass}`;
                 // Compact font size for mobile
-                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[10px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
+                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[8px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
 
                 return (
                     <div className={wrapperClass}>
@@ -371,9 +371,9 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 const bgColor = getHeatmapColor(val);
                 const textColor = t.id === 'lightPixel' ? '#ffffff' : '#000000';
                 return (
-                    // ð ãå¤å±å®¹å¨ã w-12 æ§å¶è¿ä¸åçå®½åº¦ (Width)
+                    // 👇 【外层容器】 w-12 控制这一列的宽度 (Width)
                     <div className="w-12 px-0.5 h-full flex items-center justify-center">
-                        {/* ð ãåå±æ¹åã text-[10px] æ§å¶ææºç«¯å­å·, sm:text-sm æ§å¶çµèç«¯å­å· */}
+                        {/* 👇 【内层方块】 text-[10px] 控制手机端字号, sm:text-sm 控制电脑端字号 */}
                         <div className="w-full rounded py-0.5 font-bold text-[10px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
                            {val !== undefined ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
                         </div>
@@ -388,7 +388,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 style={{ height: ROW_HEIGHT, transform: `translateY(${(startIndex + index) * ROW_HEIGHT}px)` }}
               >
                 <div className="w-8 flex items-center justify-center h-full flex-shrink-0 cursor-pointer z-10" onClick={(e) => { e.stopPropagation(); onToggleFavorite(item.symbol); }}>
-                  <span className={`text-xs ${isFav ? 'text-yellow-400' : 'opacity-20'}`}>â</span>
+                  <span className={`text-xs ${isFav ? 'text-yellow-400' : 'opacity-20'}`}>★</span>
                 </div>
                 
                 <div className={`w-16 sm:w-20 px-0.5 flex flex-col justify-center h-full ${t.textMain} overflow-hidden`}>
@@ -525,7 +525,7 @@ const PricePanel = ({ isDarkMode, onClose }) => {
 
           <div className="flex gap-2 relative z-30" ref={filterRef}>
              <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`px-2 py-1 text-[10px] border ${t.border} flex items-center gap-1 min-w-[80px] justify-between ${t.card}`}>
-                {selectedAssets.includes('ALL') ? 'ALL' : selectedAssets[0]} â¾
+                {selectedAssets.includes('ALL') ? 'ALL' : selectedAssets[0]} ▾
              </button>
              {isFilterOpen && (
                 <div className={`absolute top-full left-0 mt-1 w-64 ${t.dropdownBg} p-2 grid grid-cols-4 gap-2 z-50 shadow-xl`}>
@@ -569,7 +569,7 @@ const PricePanel = ({ isDarkMode, onClose }) => {
    PART 2: ORIGINAL APP LOGIC (Preserved)
    ========================================= */
 
-/* --- 1. éæç­é¨å¸ --- */
+/* --- 1. 静态热门币 --- */
 const POPULAR_COINS = [
   { symbol: 'BTC', name: 'Bitcoin', id: 'bitcoin' },
   { symbol: 'ETH', name: 'Ethereum', id: 'ethereum' },
@@ -608,7 +608,7 @@ const POPULAR_COINS = [
   { symbol: 'TURBO', name: 'Turbo', id: 'turbo' },
 ];
 
-/* --- 2. é¢è²æ å°è¡¨ --- */
+/* --- 2. 颜色映射表 --- */
 const COIN_COLORS = {
   BTC: '#F7931A', // Bitcoin Orange
   ETH: '#627EEA', // Ethereum Blue
@@ -627,15 +627,15 @@ const DEFAULT_PALETTE = [
   '#FF0055', '#0033FF', '#FFCC00', '#00CC66', '#CC00FF', '#00FFFF', '#FF6600',
 ];
 
-/* --- 3. ç­ç¥æ ç­¾å®ä¹ --- */
+/* --- 3. 策略标签定义 --- */
 const STRATEGY_TAGS = [
-  { id: 'DCA', label: 'å®æ', color: '#10B981', icon: Activity },
-  { id: 'SWING', label: 'æ³¢æ®µ', color: '#3B82F6', icon: TrendingUp },
-  { id: 'FOMO', label: 'è¿½æ¶¨', color: '#F59E0B', icon: Zap },
-  { id: 'YOLO', label: 'æ¢­å', color: '#EF4444', icon: Skull },
+  { id: 'DCA', label: '定投', color: '#10B981', icon: Activity },
+  { id: 'SWING', label: '波段', color: '#3B82F6', icon: TrendingUp },
+  { id: 'FOMO', label: '追涨', color: '#F59E0B', icon: Zap },
+  { id: 'YOLO', label: '梭哈', color: '#EF4444', icon: Skull },
 ];
 
-/* --- æºè½æ°å¼æ ¼å¼å --- */
+/* --- 智能数值格式化 --- */
 const smartFmt = (val, type = 'price') => {
   if (val === undefined || val === null || val === '') return '---';
   const num = parseFloat(val);
@@ -644,24 +644,24 @@ const smartFmt = (val, type = 'price') => {
 
   const absVal = Math.abs(num);
 
-  // æå°æ°å¼ (å¦ SHIB, PEPE): ä¿ç8ä½å°æ°ï¼å»é¤æ«å°¾0
+  // 极小数值 (如 SHIB, PEPE): 保留8位小数，去除末尾0
   if (absVal < 0.01) {
     return num.toFixed(8).replace(/\.?0+$/, "");
   }
   
-  // è¾å°æ°å¼ (< 1): ä¿ç4ä½å°æ°
+  // 较小数值 (< 1): 保留4位小数
   if (absVal < 1) {
     return num.toFixed(4).replace(/\.?0+$/, "");
   }
 
-  // å¤§æ°å¼: æ åè´§å¸æ ¼å¼
+  // 大数值: 标准货币格式
   return num.toLocaleString(undefined, { 
     minimumFractionDigits: 0, 
     maximumFractionDigits: type === 'amt' ? 4 : 2 
   });
 };
 
-/* --- åç´ é£ CSS --- */
+/* --- 像素风 CSS --- */
 const PixelStyles = ({ isDarkMode }) => (
   <style>{`
     :root {
@@ -835,15 +835,15 @@ const WarRoomTool_Position = () => {
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-yellow-50 dark:bg-yellow-900/30 p-3 border-2 border-yellow-200 dark:border-yellow-700 text-xs text-yellow-800 dark:text-yellow-200 font-bold flex items-center gap-2">
-        <Scale size={16}/> äºæå®é¢åæ¨ä»ä½
+        <Scale size={16}/> 亏损定额反推仓位
       </div>
       <div className="grid grid-cols-2 gap-4">
-         <div><label className="text-[10px] font-bold text-gray-500">é£é©éé¢ ($)</label><input type="number" className="pixel-input" placeholder="100" value={riskAmt} onChange={e=>setRiskAmt(e.target.value)} /></div>
-         <div><label className="text-[10px] font-bold text-gray-500">å¼ä»ä»·æ ¼</label><input type="number" className="pixel-input" placeholder="60000" value={entry} onChange={e=>setEntry(e.target.value)} /></div>
-         <div className="col-span-2"><label className="text-[10px] font-bold text-gray-500">æ­¢æä»·æ ¼</label><input type="number" className="pixel-input" placeholder="58000" value={stop} onChange={e=>setStop(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500">风险金额 ($)</label><input type="number" className="pixel-input" placeholder="100" value={riskAmt} onChange={e=>setRiskAmt(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500">开仓价格</label><input type="number" className="pixel-input" placeholder="60000" value={entry} onChange={e=>setEntry(e.target.value)} /></div>
+         <div className="col-span-2"><label className="text-[10px] font-bold text-gray-500">止损价格</label><input type="number" className="pixel-input" placeholder="58000" value={stop} onChange={e=>setStop(e.target.value)} /></div>
       </div>
       <div className="bg-black dark:bg-gray-800 text-white p-4 border-2 border-black dark:border-white mt-4">
-         <div className="text-xs opacity-70 mb-1">å»ºè®®å¼ä»æ°é (Units)</div>
+         <div className="text-xs opacity-70 mb-1">建议开仓数量 (Units)</div>
          <div className="text-3xl font-black text-green-400">{size > 0 ? smartFmt(size, 'amt') : '---'}</div>
       </div>
     </div>
@@ -864,17 +864,17 @@ const WarRoomTool_Kelly = () => {
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-blue-50 dark:bg-blue-900/30 p-3 border-2 border-blue-200 dark:border-blue-700 text-xs text-blue-800 dark:text-blue-200 font-bold flex items-center gap-2">
-        <Percent size={16}/> å¯å©å¬å¼
+        <Percent size={16}/> 凯利公式
       </div>
       <div className="grid grid-cols-2 gap-4">
          <div>
-            <label className="text-[10px] font-bold text-gray-500 mb-1 block">èç: {winRate}%</label>
+            <label className="text-[10px] font-bold text-gray-500 mb-1 block">胜率: {winRate}%</label>
             <input type="range" min="1" max="99" value={winRate} onChange={e=>setWinRate(parseInt(e.target.value))} />
          </div>
-         <div><label className="text-[10px] font-bold text-gray-500 block mb-1">èµç (1:N)</label><input type="number" className="pixel-input" placeholder="2" value={odds} onChange={e=>setOdds(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500 block mb-1">赔率 (1:N)</label><input type="number" className="pixel-input" placeholder="2" value={odds} onChange={e=>setOdds(e.target.value)} /></div>
       </div>
       <div className="bg-black dark:bg-gray-800 text-white p-4 border-2 border-black dark:border-white mt-4 text-center">
-         <div className="text-xs opacity-70 mb-1">å»ºè®®ä»ä½ %</div>
+         <div className="text-xs opacity-70 mb-1">建议仓位 %</div>
          <div className={`text-3xl font-black ${kelly > 0 ? 'text-green-400' : 'text-red-500'}`}>{kelly.toFixed(2)}%</div>
       </div>
     </div>
@@ -884,24 +884,24 @@ const WarRoomTool_Kelly = () => {
 const WarRoomTool_Drawdown = () => {
   const [loss, setLoss] = useState(10);
   const gainNeeded = useMemo(() => {
-    if (loss >= 100) return 'ð';
+    if (loss >= 100) return '💀';
     return (1 / (1 - (loss / 100)) - 1) * 100;
   }, [loss]);
 
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-red-50 dark:bg-red-900/30 p-3 border-2 border-red-200 dark:border-red-700 text-xs text-red-800 dark:text-red-200 font-bold flex items-center gap-2">
-        <TrendingDown size={16}/> åæ¬é¾åº¦è®¡ç®
+        <TrendingDown size={16}/> 回本难度计算
       </div>
       <div className="py-4">
          <label className="text-xs font-bold text-gray-500 mb-2 block flex justify-between">
-            <span>å½åäºæ</span>
+            <span>当前亏损</span>
             <span className="text-red-600">-{loss}%</span>
          </label>
          <input type="range" min="1" max="99" value={loss} onChange={e=>setLoss(parseInt(e.target.value))} />
       </div>
       <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-4 border-2 border-gray-300 dark:border-gray-600">
-          <div className="text-sm font-bold text-gray-500 dark:text-gray-400">éæ¶¨å¹</div>
+          <div className="text-sm font-bold text-gray-500 dark:text-gray-400">需涨幅</div>
           <div className="text-3xl font-black text-black dark:text-white">{typeof gainNeeded === 'string' ? gainNeeded : '+' + gainNeeded.toFixed(1) + '%'}</div>
       </div>
     </div>
@@ -934,18 +934,18 @@ const WarRoomTool_AvgDown = () => {
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-gray-50 dark:bg-gray-800 p-3 border-2 border-gray-200 dark:border-gray-600 text-xs text-gray-800 dark:text-gray-200 font-bold flex items-center gap-2">
-        <Target size={16}/> è¡¥ä»è®¡ç®å¨
+        <Target size={16}/> 补仓计算器
       </div>
       <div className="grid grid-cols-2 gap-3">
-         <div><label className="text-[10px] font-bold text-gray-500">æä»</label><input type="number" className="pixel-input" placeholder="1000" value={curQty} onChange={e=>setCurQty(e.target.value)} /></div>
-         <div><label className="text-[10px] font-bold text-gray-500">åä»·</label><input type="number" className="pixel-input" placeholder="10" value={curAvg} onChange={e=>setCurAvg(e.target.value)} /></div>
-         <div><label className="text-[10px] font-bold text-gray-500">è¡¥ä»ä»·</label><input type="number" className="pixel-input" placeholder="5" value={buyPrice} onChange={e=>setBuyPrice(e.target.value)} /></div>
-         <div><label className="text-[10px] font-bold text-gray-500 dark:text-gray-300">ç®æ åä»·</label><input type="number" className="pixel-input border-black" placeholder="8" value={targetAvg} onChange={e=>setTargetAvg(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500">持仓</label><input type="number" className="pixel-input" placeholder="1000" value={curQty} onChange={e=>setCurQty(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500">均价</label><input type="number" className="pixel-input" placeholder="10" value={curAvg} onChange={e=>setCurAvg(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500">补仓价</label><input type="number" className="pixel-input" placeholder="5" value={buyPrice} onChange={e=>setBuyPrice(e.target.value)} /></div>
+         <div><label className="text-[10px] font-bold text-gray-500 dark:text-gray-300">目标均价</label><input type="number" className="pixel-input border-black" placeholder="8" value={targetAvg} onChange={e=>setTargetAvg(e.target.value)} /></div>
       </div>
       <div className="bg-black dark:bg-gray-900 text-white p-4 border-2 border-black dark:border-white mt-4">
-         <div className="text-xs opacity-70 mb-1">éè¦ä¹°å¥æ°é</div>
+         <div className="text-xs opacity-70 mb-1">需要买入数量</div>
          <div className="text-3xl font-black text-white">
-           {neededQty === 'Impossible' ? 'æ æ³å®ç°' : (neededQty ? smartFmt(neededQty, 'amt') : '---')}
+           {neededQty === 'Impossible' ? '无法实现' : (neededQty ? smartFmt(neededQty, 'amt') : '---')}
          </div>
       </div>
     </div>
@@ -968,16 +968,16 @@ const WarRoomTool_Compound = () => {
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-purple-50 dark:bg-purple-900/30 p-3 border-2 border-purple-200 dark:border-purple-700 text-xs text-purple-800 dark:text-purple-200 font-bold flex items-center gap-2">
-        <Rocket size={16}/> å¤å©æ¨æ¼
+        <Rocket size={16}/> 复利推演
       </div>
       <div className="grid grid-cols-3 gap-3">
-         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">æ¬é</label><input type="number" className="pixel-input" value={principal} onChange={e=>setPrincipal(e.target.value)} /></div>
-         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">æ¥æ¶ç%</label><input type="number" className="pixel-input" value={rate} onChange={e=>setRate(e.target.value)} /></div>
-         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">å¤©æ°</label><input type="number" className="pixel-input" value={days} onChange={e=>setDays(e.target.value)} /></div>
+         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">本金</label><input type="number" className="pixel-input" value={principal} onChange={e=>setPrincipal(e.target.value)} /></div>
+         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">日收益%</label><input type="number" className="pixel-input" value={rate} onChange={e=>setRate(e.target.value)} /></div>
+         <div className="col-span-1"><label className="text-[10px] font-bold text-gray-500">天数</label><input type="number" className="pixel-input" value={days} onChange={e=>setDays(e.target.value)} /></div>
       </div>
       <div className="bg-black dark:bg-gray-900 text-white p-4 border-2 border-black dark:border-white mt-4">
          <div className="flex justify-between items-end mb-2">
-            <div className="text-xs opacity-70">æç»èµé</div>
+            <div className="text-xs opacity-70">最终资金</div>
             <div className="text-3xl font-black text-purple-300">${result.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
          </div>
       </div>
@@ -1002,29 +1002,29 @@ const WarRoomTool_Ruin = () => {
   return (
     <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
       <div className="bg-gray-900 text-white p-3 border-2 border-black dark:border-white text-xs font-bold flex items-center gap-2">
-        <Skull size={16}/> æ­»äº¡è®¡ç®å¨
+        <Skull size={16}/> 死亡计算器
       </div>
       <div className="grid grid-cols-2 gap-4">
          <div>
-            <label className="text-[10px] font-bold text-gray-500 block mb-1">èç (%)</label>
+            <label className="text-[10px] font-bold text-gray-500 block mb-1">胜率 (%)</label>
             <input type="number" className="pixel-input" value={winRate} onChange={e=>setWinRate(e.target.value)} />
          </div>
          <div>
-            <label className="text-[10px] font-bold text-gray-500 block mb-1">çäºæ¯</label><input type="number" className="pixel-input" value={rewardRatio} onChange={e=>setRewardRatio(e.target.value)} />
+            <label className="text-[10px] font-bold text-gray-500 block mb-1">盈亏比</label><input type="number" className="pixel-input" value={rewardRatio} onChange={e=>setRewardRatio(e.target.value)} />
          </div>
          <div className="col-span-2">
-            <label className="text-[10px] font-bold text-gray-500 block mb-1">åç¬é£é© ({riskPerTrade}%)</label>
+            <label className="text-[10px] font-bold text-gray-500 block mb-1">单笔风险 ({riskPerTrade}%)</label>
             <input type="range" min="1" max="20" step="1" value={riskPerTrade} onChange={e=>setRiskPerTrade(e.target.value)} className="w-full" />
          </div>
       </div>
       <div className={`p-4 border-2 border-black dark:border-white mt-4 ${stats.ev > 0 ? 'bg-white dark:bg-gray-800' : 'bg-red-50 dark:bg-red-900/30'}`}>
          <div className="flex justify-between items-center mb-2">
-           <div className="text-xs font-bold text-gray-500 dark:text-gray-400">ææå¼ (EV)</div>
+           <div className="text-xs font-bold text-gray-500 dark:text-gray-400">期望值 (EV)</div>
            <div className={`font-bold ${stats.ev > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>{stats.ev > 0 ? '+' : ''}{stats.ev.toFixed(2)} R</div>
          </div>
          <div className="flex justify-between items-center">
-            <div className="text-xs font-bold text-gray-500 dark:text-gray-400">è¿è´¥çä»æ­¥æ°</div>
-            <div className="font-black text-2xl text-black dark:text-white">{stats.ev <= 0 ? 'å¿æ­»' : `${stats.stepsToDeath} æ­¥`}</div>
+            <div className="text-xs font-bold text-gray-500 dark:text-gray-400">连败爆仓步数</div>
+            <div className="font-black text-2xl text-black dark:text-white">{stats.ev <= 0 ? '必死' : `${stats.stepsToDeath} 步`}</div>
          </div>
       </div>
     </div>
@@ -1209,7 +1209,7 @@ export default function PixelTraderV34_PriceBoard() {
                 if (doc.exists()) {
                     const data = doc.data();
                     if (data.assets && JSON.stringify(data.assets) !== JSON.stringify(assetsRef.current)) {
-                        console.log("ð¥ Firebase: Received update");
+                        console.log("🔥 Firebase: Received update");
                         isRemoteUpdate.current = true;
                         setAssets(data.assets);
                         setTimeout(() => { isRemoteUpdate.current = false; }, 100);
@@ -1235,7 +1235,7 @@ export default function PixelTraderV34_PriceBoard() {
     if (firebaseStatus === 'connected' && dbRef.current && !isRemoteUpdate.current) {
         const timer = setTimeout(async () => {
             try {
-                console.log("ð¥ Firebase: Syncing up...");
+                console.log("🔥 Firebase: Syncing up...");
                 await setDoc(doc(dbRef.current, "pixel_trader", "user_data"), { 
                     assets, 
                     lastUpdated: new Date().toISOString() 
@@ -1256,7 +1256,7 @@ export default function PixelTraderV34_PriceBoard() {
                 const formData = new FormData();
                 formData.append('chat_id', cloudConfig.tgChatId);
                 formData.append('document', blob, `backup_${Date.now()}.json`);
-                formData.append('caption', `ð¤ Auto-Backup: ${new Date().toLocaleTimeString()}`);
+                formData.append('caption', `🤖 Auto-Backup: ${new Date().toLocaleTimeString()}`);
                 await fetch(`https://api.telegram.org/bot${cloudConfig.tgToken}/sendDocument`, {
                     method: 'POST',
                     body: formData
@@ -1467,16 +1467,16 @@ export default function PixelTraderV34_PriceBoard() {
   // --- AI Advisor Logic ---
   const getAiAdvice = (asset) => {
      const { roi, avgPrice } = asset;
-     if(avgPrice === 0) return { text: "å»ºä»è§å¯æï¼å¯»æ¾ä½ç¹ã", color: "text-gray-500" };
-     if(roi === 0) return { text: "æ°æ®ä¸è¶³ï¼æ æ³åæã", color: "text-gray-500" };
+     if(avgPrice === 0) return { text: "建仓观察期，寻找低点。", color: "text-gray-500" };
+     if(roi === 0) return { text: "数据不足，无法分析。", color: "text-gray-500" };
      
-     if(roi < 0.3) return { text: "æ·±å¥ï¼å»ºè®®è£æ­»ææå°é¢å®æï¼åå¿éä»æåºã", color: "text-red-600" };
-     if(roi < 0.6) return { text: "äºæè¾å¤§ãè¥åºæ¬é¢æªåï¼å¯èèåææå¹³ã", color: "text-orange-600" };
-     if(roi < 0.9) return { text: "è½»å¾®æµ®äºãéè¡åºé´ï¼éåç½æ ¼äº¤æã", color: "text-yellow-600" };
-     if(roi < 1.1) return { text: "ææ¬çº¿éè¿ãå¤çå°å¨ï¼ç­å¾æ¹åã", color: "text-blue-600" };
-     if(roi < 1.5) return { text: "çå©ç¶æãææä¸ºä¸»ï¼è·ç ´åä»·æ­¢æã", color: "text-green-600" };
-     if(roi < 3.0) return { text: "å¤§å¹çå©ï¼å»ºè®®åæ¹æ­¢çï¼ä¿çåºä»ã", color: "text-purple-600" };
-     return { text: "To the Moon! è·å©ä¸°åï¼æ³¨æåè°é£é©ã", color: "text-purple-500" };
+     if(roi < 0.3) return { text: "深套！建议装死或极小额定投，切勿重仓抄底。", color: "text-red-600" };
+     if(roi < 0.6) return { text: "亏损较大。若基本面未变，可考虑倍投摊平。", color: "text-orange-600" };
+     if(roi < 0.9) return { text: "轻微浮亏。震荡区间，适合网格交易。", color: "text-yellow-600" };
+     if(roi < 1.1) return { text: "成本线附近。多看少动，等待方向。", color: "text-blue-600" };
+     if(roi < 1.5) return { text: "盈利状态。持有为主，跌破均价止损。", color: "text-green-600" };
+     if(roi < 3.0) return { text: "大幅盈利！建议分批止盈，保留底仓。", color: "text-purple-600" };
+     return { text: "To the Moon! 获利丰厚，注意回调风险。", color: "text-purple-500" };
   }
 
   const handleGlobalBackup = () => {
@@ -1555,7 +1555,7 @@ export default function PixelTraderV34_PriceBoard() {
         }
         
         // --- 2. PERFORM OCR ---
-        // Load both Simplified Chinese (for "ååº"/"æ°é") and English (for numbers)
+        // Load both Simplified Chinese (for "卖出"/"数量") and English (for numbers)
         const worker = await window.Tesseract.createWorker('chi_sim+eng'); 
         const ret = await worker.recognize(file);
         const text = ret.data.text;
@@ -1565,12 +1565,12 @@ export default function PixelTraderV34_PriceBoard() {
 
         // --- 3. INTELLIGENT PARSING ---
         let type = 'BUY';
-        if (text.includes('ååº') || text.includes('Sell') || text.includes('Short')) type = 'SELL';
+        if (text.includes('卖出') || text.includes('Sell') || text.includes('Short')) type = 'SELL';
         
-        // Regex strategy for receipt formats like: "æ°é 94.7 / 94.7" or "ä»·æ ¼ 0.3944"
+        // Regex strategy for receipt formats like: "数量 94.7 / 94.7" or "价格 0.3944"
         // Matches "Keyword" followed by non-digits, then a number (integer or float)
-        const amountMatch = text.match(/æ°é[^\d]*([\d.]+)/); 
-        const priceMatch = text.match(/ä»·æ ¼[^\d]*([\d.]+)/) || text.match(/æäº¤åä»·[^\d]*([\d.]+)/);
+        const amountMatch = text.match(/数量[^\d]*([\d.]+)/); 
+        const priceMatch = text.match(/价格[^\d]*([\d.]+)/) || text.match(/成交均价[^\d]*([\d.]+)/);
         
         // Date detection (YYYY-MM-DD)
         const dateMatch = text.match(/(\d{4}-\d{2}-\d{2})/);
@@ -1599,10 +1599,10 @@ export default function PixelTraderV34_PriceBoard() {
     const asset = assets.find(a => a.id === activeHistoryId);
     if (!asset) return;
     const data = asset.transactions.sort((a, b) => new Date(a.date) - new Date(b.date)).map(tx => ({
-      date: tx.date, type: tx.type === 'BUY' ? 'ä¹°' : 'å', price: tx.price, amount: tx.amount
+      date: tx.date, type: tx.type === 'BUY' ? '买' : '卖', price: tx.price, amount: tx.amount
     }));
     let content = format === 'json' ? JSON.stringify(data, null, 2) : 
-      `| æ¥æ | ç±»å | ä»·æ ¼ | æ°é |\n|---|---|---|---|\n` + data.map(row => `| ${row.date} | ${row.type} | ${row.price} | ${row.amount} |`).join('\n');
+      `| 日期 | 类型 | 价格 | 数量 |\n|---|---|---|---|\n` + data.map(row => `| ${row.date} | ${row.type} | ${row.price} | ${row.amount} |`).join('\n');
     const blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `${asset.symbol}.${format}`;
@@ -1620,7 +1620,7 @@ export default function PixelTraderV34_PriceBoard() {
                      parsed.push({
                          id: Math.random().toString(),
                          date: item.date,
-                         type: ['å','SELL','sell'].includes(item.type) ? 'SELL' : 'BUY',
+                         type: ['卖','SELL','sell'].includes(item.type) ? 'SELL' : 'BUY',
                          price: parseFloat(item.price),
                          amount: parseFloat(item.amount),
                          strategy: 'DCA'
@@ -1636,7 +1636,7 @@ export default function PixelTraderV34_PriceBoard() {
        if (cols.length >= 4) {
            let type = 'BUY';
            const rawType = cols[1].toLowerCase();
-           if (rawType.includes('sell') || rawType.includes('å')) type = 'SELL';
+           if (rawType.includes('sell') || rawType.includes('卖')) type = 'SELL';
            const cleanNum = (str) => parseFloat(str.replace(/[^\d.-]/g, ''));
            const price = cleanNum(cols[2]);
            const amount = cleanNum(cols[3]);
@@ -1898,13 +1898,13 @@ export default function PixelTraderV34_PriceBoard() {
 
           <div className="grid grid-cols-2 gap-4 border-t-2 border-dashed border-gray-300 dark:border-gray-700 pt-4">
             <div>
-              <div className="text-xs opacity-50 font-bold mb-1">UNREALIZED (æµ®ç)</div>
+              <div className="text-xs opacity-50 font-bold mb-1">UNREALIZED (浮盈)</div>
               <div className={`text-xl font-bold ${totalStats.totalUnrealized >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {totalStats.totalUnrealized >= 0 ? '+' : ''}{totalStats.totalUnrealized < 0 ? '-' : ''}<MaskedValue value={Math.abs(totalStats.totalUnrealized).toLocaleString(undefined, { maximumFractionDigits: 0 })} prefix="$" />
               </div>
             </div>
             <div>
-              <div className="text-xs opacity-50 font-bold mb-1">REALIZED (å·²è½è¢)</div>
+              <div className="text-xs opacity-50 font-bold mb-1">REALIZED (已落袋)</div>
               <div className={`text-xl font-bold ${totalStats.totalRealized >= 0 ? '' : 'text-red-600'}`}>
                 {totalStats.totalRealized >= 0 ? '+' : ''}{totalStats.totalRealized < 0 ? '-' : ''}<MaskedValue value={Math.abs(totalStats.totalRealized).toLocaleString(undefined, { maximumFractionDigits: 0 })} prefix="$" />
               </div>
@@ -1970,10 +1970,10 @@ export default function PixelTraderV34_PriceBoard() {
                            <span className="opacity-50">|</span>
                            <span>Avg: <MaskedValue value={smartFmt(asset.avgPrice)} /></span>
                            <span className="opacity-50">|</span>
-                           <span className="flex items-center gap-1"><Hash size={10}/>{asset.transactions.length} æ¬¡</span>
+                           <span className="flex items-center gap-1"><Hash size={10}/>{asset.transactions.length} 次</span>
                         </div>
                         {/* NEW: Timeframe Percentage Row */}
-                        <div className="flex flex-wrap gap-3 text-8 font-bold mt-2">
+                        <div className="flex flex-wrap gap-3 text-xs font-bold mt-2">
                            <span className={getStatColor(stats.changePercent1h)}>H {renderStatVal(stats.changePercent1h)}</span>
                            <span className={getStatColor(stats.changePercent4h)}>4H {renderStatVal(stats.changePercent4h)}</span>
                            <span className={getStatColor(stats.changePercent24h)}>D {renderStatVal(stats.changePercent24h)}</span>
@@ -1998,8 +1998,8 @@ export default function PixelTraderV34_PriceBoard() {
                   </div>
 
                   <div className="flex gap-2">
-                     <button onClick={() => setActiveHistoryId(asset.id)} className="flex-1 pixel-btn py-2 text-xs hover:opacity-80"><History size={14} /> äº¤æè®°å½</button>
-                     <button onClick={() => { if (activeCalcId === asset.id) { setActiveCalcId(null); } else { setActiveCalcId(asset.id); setCalcPrice(asset.currentPrice || asset.avgPrice); setCalcInput(''); setCalcMode('amount'); } }} className={`flex-1 pixel-btn py-2 text-xs ${isCalcOpen ? 'primary' : 'hover:opacity-80'}`}><Zap size={14} /> {isCalcOpen ? 'å³é­æ¨æ¼' : 'è¡¥ä»æ¨æ¼'}</button>
+                     <button onClick={() => setActiveHistoryId(asset.id)} className="flex-1 pixel-btn py-2 text-xs hover:opacity-80"><History size={14} /> 交易记录</button>
+                     <button onClick={() => { if (activeCalcId === asset.id) { setActiveCalcId(null); } else { setActiveCalcId(asset.id); setCalcPrice(asset.currentPrice || asset.avgPrice); setCalcInput(''); setCalcMode('amount'); } }} className={`flex-1 pixel-btn py-2 text-xs ${isCalcOpen ? 'primary' : 'hover:opacity-80'}`}><Zap size={14} /> {isCalcOpen ? '关闭推演' : '补仓推演'}</button>
                   </div>
                 </div>
 
@@ -2008,17 +2008,17 @@ export default function PixelTraderV34_PriceBoard() {
                     <div className="flex justify-between items-center mb-4">
                       <div className="text-xs font-bold flex items-center gap-1"><Calculator size={14} /> SIMULATOR</div>
                       <div className={`flex border-2 ${isDarkMode ? 'border-gray-500 bg-gray-900' : 'border-black bg-white'}`}>
-                        <button onClick={() => setCalcMode('amount')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'amount' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'opacity-50'}`}>æéé¢</button>
-                        <button onClick={() => setCalcMode('quantity')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'quantity' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'opacity-50'}`}>ææ°é</button>
-                        <button onClick={() => setCalcMode('risk_free')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'risk_free' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'text-green-600'}`}>åºæ¬</button>
+                        <button onClick={() => setCalcMode('amount')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'amount' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'opacity-50'}`}>按金额</button>
+                        <button onClick={() => setCalcMode('quantity')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'quantity' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'opacity-50'}`}>按数量</button>
+                        <button onClick={() => setCalcMode('risk_free')} className={`px-2 py-1 text-[10px] font-bold ${calcMode === 'risk_free' ? (isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white') : 'text-green-600'}`}>出本</button>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mb-4">
-                      <div><label className="text-[10px] font-bold opacity-50 block mb-1">ä»·æ ¼ ($)</label><input type="number" className="pixel-input" value={calcPrice} onChange={e => setCalcPrice(e.target.value)} /></div>
+                      <div><label className="text-[10px] font-bold opacity-50 block mb-1">价格 ($)</label><input type="number" className="pixel-input" value={calcPrice} onChange={e => setCalcPrice(e.target.value)} /></div>
                       <div>
-                        <label className="text-[10px] font-bold opacity-50 block mb-1">{calcMode === 'risk_free' ? 'ç®æ ' : (calcMode === 'amount' ? 'æå¥ (U)' : 'æ°é')}</label>
+                        <label className="text-[10px] font-bold opacity-50 block mb-1">{calcMode === 'risk_free' ? '目标' : (calcMode === 'amount' ? '投入 (U)' : '数量')}</label>
                         {calcMode === 'risk_free' ? (
-                          <div className={`pixel-input text-xs flex justify-center items-center opacity-50 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>æ¶åæ¬é</div>
+                          <div className={`pixel-input text-xs flex justify-center items-center opacity-50 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>收回本金</div>
                         ) : (
                           <input type="number" className="pixel-input" value={calcInput} onChange={e => setCalcInput(e.target.value)} placeholder="500" />
                         )}
@@ -2028,18 +2028,18 @@ export default function PixelTraderV34_PriceBoard() {
                        <div className={`border-2 p-3 ${isDarkMode ? 'bg-gray-900 border-gray-500' : 'bg-white border-black'}`}>
                           {dca.type === 'risk_free' ? (
                              <div className="text-center">
-                                <div className="text-xs opacity-50 font-bold mb-1">åæ¬éååº</div>
-                                <div className={`text-xl font-black ${dca.isProfitable ? 'text-green-600' : 'text-red-600'}`}>{dca.isProfitable ? dca.amountToSell.toFixed(4) : 'æ æ³åºæ¬'}</div>
+                                <div className="text-xs opacity-50 font-bold mb-1">回本需卖出</div>
+                                <div className={`text-xl font-black ${dca.isProfitable ? 'text-green-600' : 'text-red-600'}`}>{dca.isProfitable ? dca.amountToSell.toFixed(4) : '无法出本'}</div>
                              </div>
                           ) : (
                              <>
                                 <div className="flex justify-between items-end mb-2">
-                                   <div className="text-xs opacity-50 font-bold">è¡¥ä»ååä»·</div>
+                                   <div className="text-xs opacity-50 font-bold">补仓后均价</div>
                                    <div className={`text-xl font-black px-2 ${isDarkMode ? 'bg-gray-100 text-black' : 'bg-black text-white'}`}>${smartFmt(dca.newAvg)}</div>
                                 </div>
                                 <div className={`flex justify-between text-xs opacity-50 border-t pt-2 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-                                   <span>è·å¾: {smartFmt(dca.buyAmount, 'amt')}</span>
-                                   <span className="text-green-600 font-bold">éå¹: {dca.drop.toFixed(2)}%</span>
+                                   <span>获得: {smartFmt(dca.buyAmount, 'amt')}</span>
+                                   <span className="text-green-600 font-bold">降幅: {dca.drop.toFixed(2)}%</span>
                                 </div>
                              </>
                           )}
@@ -2076,12 +2076,12 @@ export default function PixelTraderV34_PriceBoard() {
                </div>
                
                <div className={`flex overflow-x-auto border-b-2 no-scrollbar p-1 gap-1 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
-                  <div onClick={()=>setWarRoomTab('position')} className={`wr-tab ${warRoomTab==='position'?'active':''}`}>ä»ä½</div>
-                  <div onClick={()=>setWarRoomTab('kelly')} className={`wr-tab ${warRoomTab==='kelly'?'active':''}`}>å¯å©</div>
-                  <div onClick={()=>setWarRoomTab('drawdown')} className={`wr-tab ${warRoomTab==='drawdown'?'active':''}`}>åæ¬</div>
-                  <div onClick={()=>setWarRoomTab('avgdown')} className={`wr-tab ${warRoomTab==='avgdown'?'active':''}`}>å¹³å</div>
-                  <div onClick={()=>setWarRoomTab('compound')} className={`wr-tab ${warRoomTab==='compound'?'active':''}`}>å¤å©</div>
-                  <div onClick={()=>setWarRoomTab('ruin')} className={`wr-tab ${warRoomTab==='ruin'?'active':''}`}>ç ´äº§</div>
+                  <div onClick={()=>setWarRoomTab('position')} className={`wr-tab ${warRoomTab==='position'?'active':''}`}>仓位</div>
+                  <div onClick={()=>setWarRoomTab('kelly')} className={`wr-tab ${warRoomTab==='kelly'?'active':''}`}>凯利</div>
+                  <div onClick={()=>setWarRoomTab('drawdown')} className={`wr-tab ${warRoomTab==='drawdown'?'active':''}`}>回本</div>
+                  <div onClick={()=>setWarRoomTab('avgdown')} className={`wr-tab ${warRoomTab==='avgdown'?'active':''}`}>平均</div>
+                  <div onClick={()=>setWarRoomTab('compound')} className={`wr-tab ${warRoomTab==='compound'?'active':''}`}>复利</div>
+                  <div onClick={()=>setWarRoomTab('ruin')} className={`wr-tab ${warRoomTab==='ruin'?'active':''}`}>破产</div>
                </div>
 
                <div className="p-6 flex-1 overflow-y-auto">
@@ -2313,10 +2313,10 @@ export default function PixelTraderV34_PriceBoard() {
                    return (
                      <div key={tx.id} className={`border-2 p-3 flex justify-between items-center group ${isDarkMode ? 'bg-gray-900 border-gray-600 hover:border-white' : 'bg-white border-gray-300 hover:border-black'}`}>
                         <div className="flex items-center gap-3">
-                           <div className={`w-8 h-8 flex items-center justify-center text-white font-bold text-xs border ${isDarkMode ? 'border-gray-400' : 'border-black'} ${tx.type==='BUY'?'bg-green-600':'bg-red-500'}`}>{tx.type==='BUY'?'ä¹°':'å'}</div>
+                           <div className={`w-8 h-8 flex items-center justify-center text-white font-bold text-xs border ${isDarkMode ? 'border-gray-400' : 'border-black'} ${tx.type==='BUY'?'bg-green-600':'bg-red-500'}`}>{tx.type==='BUY'?'买':'卖'}</div>
                            <div>
                               <div className="font-bold text-sm flex items-center gap-2">
-                                 {tx.type==='BUY'?'ä¹°å¥':'ååº'} <MaskedValue value={smartFmt(tx.amount, 'amt')} prefix="" />
+                                 {tx.type==='BUY'?'买入':'卖出'} <MaskedValue value={smartFmt(tx.amount, 'amt')} prefix="" />
                                  {tag && <span className="text-[10px] px-1 border rounded text-white font-normal" style={{backgroundColor: tag.color, borderColor: tag.color}}>{tag.label}</span>}
                               </div>
                               <div className="text-xs opacity-50">@ <MaskedValue value={smartFmt(tx.price)} /> on {tx.date}</div>
@@ -2331,8 +2331,8 @@ export default function PixelTraderV34_PriceBoard() {
               <div className={`p-4 border-t-4 ${isDarkMode ? 'border-gray-100 bg-gray-900' : 'border-gray-900 bg-white'}`}>
                 <div className="flex flex-col gap-3">
                   <div className="grid grid-cols-2 gap-3">
-                      <button onClick={()=>setTxForm({...txForm, type:'BUY'})} className={`pixel-btn h-[42px] text-xs font-bold ${txForm.type==='BUY'?'primary':''}`}>BUY (ä¹°å¥)</button>
-                      <button onClick={()=>setTxForm({...txForm, type:'SELL'})} className={`pixel-btn h-[42px] text-xs font-bold ${txForm.type==='SELL'?'primary':''}`}>SELL (ååº)</button>
+                      <button onClick={()=>setTxForm({...txForm, type:'BUY'})} className={`pixel-btn h-[42px] text-xs font-bold ${txForm.type==='BUY'?'primary':''}`}>BUY (买入)</button>
+                      <button onClick={()=>setTxForm({...txForm, type:'SELL'})} className={`pixel-btn h-[42px] text-xs font-bold ${txForm.type==='SELL'?'primary':''}`}>SELL (卖出)</button>
                   </div>
                   <div className="flex gap-3">
                       <input type="number" className="pixel-input h-[42px] text-sm w-1/3" placeholder="Price ($)" value={txForm.price} onChange={e=>setTxForm({...txForm, price:e.target.value})}/>
