@@ -353,7 +353,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 // Removed hidden logic
                 const wrapperClass = `${isBoxed ? 'w-12' : (isFlex ? 'flex-1' : 'w-auto')} ${isLast ? 'pr-1.5' : 'px-0.5'} h-full flex items-center justify-end ${extraClass}`;
                 // Compact font size for mobile
-                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[9px] sm:text-xs text-center' : 'w-full text-[9px] sm:text-xs font-mono text-right';
+                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[10px] sm:text-xs text-center' : 'w-full text-[10px] sm:text-xs font-mono text-right';
 
                 return (
                     <div className={wrapperClass}>
@@ -374,7 +374,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                     // 👇 【外层容器】 w-12 控制这一列的宽度 (Width)
                     <div className="w-12 px-0.5 h-full flex items-center justify-center">
                         {/* 👇 【内层方块】 text-[10px] 控制手机端字号, sm:text-sm 控制电脑端字号 */}
-                        <div className="w-full rounded py-0.5 font-bold text-[9px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
+                        <div className="w-full rounded py-0.5 font-bold text-[10px] sm:text-sm text-center" style={{ backgroundColor: bgColor, color: textColor }}>
                            {val !== undefined ? `${val > 0 ? '+' : ''}${val.toFixed(2)}%` : '-'}
                         </div>
                     </div>
