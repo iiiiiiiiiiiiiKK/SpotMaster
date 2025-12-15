@@ -1966,7 +1966,7 @@ export default function PixelTraderV34_PriceBoard() {
                            <span className="opacity-50">|</span>
                            <span>Avg: <MaskedValue value={smartFmt(asset.avgPrice)} /></span>
                            <span className="opacity-50">|</span>
-                           <span className="flex items-center gap-1"><Hash size={10}/> # {asset.transactions.length} 次</span>
+                           <span className="flex items-center gap-1"><Hash size={10}/>{asset.transactions.length} 次</span>
                         </div>
                         {/* NEW: Timeframe Percentage Row */}
                         <div className="flex flex-wrap gap-2 text-[9px] sm:text-[10px] font-mono opacity-80 mt-1">
