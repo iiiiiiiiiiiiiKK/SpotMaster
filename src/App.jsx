@@ -353,7 +353,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 // Removed hidden logic
                 const wrapperClass = `${isBoxed ? 'w-12' : (isFlex ? 'flex-1' : 'w-auto')} ${isLast ? 'pr-1.5' : 'px-0.5'} h-full flex items-center justify-end ${extraClass}`;
                 // Compact font size for mobile
-                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[8px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
+                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[2px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
 
                 return (
                     <div className={wrapperClass}>
