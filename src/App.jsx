@@ -1527,32 +1527,64 @@ export default function PixelTraderV34_PriceBoard() {
     setTxForm({ ...txForm, price: '', amount: '' }); 
   };
   
-  // OCR Simulation Logic
+  // OCR Simulation Logic REPLACED with Real Tesseract.js
   const handleOcrClick = () => {
       fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
       const file = e.target.files[0];
-      if (file) {
-          setIsOcrScanning(true);
-          // Simulate OCR delay
-          setTimeout(() => {
-              const asset = assets.find(a => a.id === activeHistoryId);
-              const mockPrice = asset?.currentPrice || Math.floor(Math.random() * 50000) + 1000;
-              const mockAmount = (Math.random() * 2).toFixed(4);
-              const today = new Date().toISOString().split('T')[0];
-              
-              setTxForm(prev => ({
-                  ...prev,
-                  price: mockPrice,
-                  amount: mockAmount,
-                  date: today
-              }));
-              setIsOcrScanning(false);
-              // Reset file input
-              if(fileInputRef.current) fileInputRef.current.value = '';
-          }, 1500);
+      if (!file) return;
+      
+      setIsOcrScanning(true);
+      try {
+        // --- 1. DYNAMICALLY LOAD TESSERACT IF NEEDED ---
+        // This ensures the code works in environments where npm install isn't possible
+        if (!window.Tesseract) {
+           await new Promise((resolve, reject) => {
+             const script = document.createElement('script');
+             script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+             script.onload = resolve;
+             script.onerror = reject;
+             document.head.appendChild(script);
+           });
+        }
+        
+        // --- 2. PERFORM OCR ---
+        // Load both Simplified Chinese (for "卖出"/"数量") and English (for numbers)
+        const worker = await window.Tesseract.createWorker('chi_sim+eng'); 
+        const ret = await worker.recognize(file);
+        const text = ret.data.text;
+        await worker.terminate();
+        
+        console.log("OCR Result:", text); // Debugging
+
+        // --- 3. INTELLIGENT PARSING ---
+        let type = 'BUY';
+        if (text.includes('卖出') || text.includes('Sell') || text.includes('Short')) type = 'SELL';
+        
+        // Regex strategy for receipt formats like: "数量 94.7 / 94.7" or "价格 0.3944"
+        // Matches "Keyword" followed by non-digits, then a number (integer or float)
+        const amountMatch = text.match(/数量[^\d]*([\d.]+)/); 
+        const priceMatch = text.match(/价格[^\d]*([\d.]+)/) || text.match(/成交均价[^\d]*([\d.]+)/);
+        
+        // Date detection (YYYY-MM-DD)
+        const dateMatch = text.match(/(\d{4}-\d{2}-\d{2})/);
+        
+        setTxForm(prev => ({
+            ...prev,
+            type,
+            amount: amountMatch ? amountMatch[1] : prev.amount,
+            price: priceMatch ? priceMatch[1] : prev.price,
+            date: dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0]
+        }));
+
+      } catch (err) {
+        console.error("OCR Error", err);
+        alert("OCR Failed. Please try again or enter manually.");
+      } finally {
+        setIsOcrScanning(false);
+        if(fileInputRef.current) fileInputRef.current.value = '';
       }
   };
   
