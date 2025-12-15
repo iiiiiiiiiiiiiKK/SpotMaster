@@ -353,7 +353,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                 // Removed hidden logic
                 const wrapperClass = `${isBoxed ? 'w-12' : (isFlex ? 'flex-1' : 'w-auto')} ${isLast ? 'pr-1.5' : 'px-0.5'} h-full flex items-center justify-end ${extraClass}`;
                 // Compact font size for mobile
-                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[8px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
+                let innerClass = isBoxed ? 'w-full rounded py-0.5 font-bold text-[10px] sm:text-xs text-center' : 'w-full text-[8px] sm:text-xs font-mono text-right';
 
                 return (
                     <div className={wrapperClass}>
@@ -1973,7 +1973,7 @@ export default function PixelTraderV34_PriceBoard() {
                            <span className="flex items-center gap-1"><Hash size={10}/>{asset.transactions.length} 次</span>
                         </div>
                         {/* NEW: Timeframe Percentage Row */}
-                        <div className="flex flex-wrap gap-3 text-2px font-bold mt-2">
+                        <div className="flex flex-wrap gap-3 text-[8px] font-bold mt-2">
                            <span className={getStatColor(stats.changePercent1h)}>H {renderStatVal(stats.changePercent1h)}</span>
                            <span className={getStatColor(stats.changePercent4h)}>4H {renderStatVal(stats.changePercent4h)}</span>
                            <span className={getStatColor(stats.changePercent24h)}>D {renderStatVal(stats.changePercent24h)}</span>
