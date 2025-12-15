@@ -401,7 +401,7 @@ const VirtualTable = ({ data, favorites, onToggleFavorite, onSortedIdsChange, th
                      </div>
                 </div>
                 
-                <div className={`w-16 sm:w-20 px-0.5 text-right font-mono text-[9px] sm:text-sm font-medium h-full flex items-center justify-end ${t.textMain}`}>
+                <div className={`w-16 sm:w-20 px-0.5 text-right font-mono text-[8px] sm:text-sm font-medium h-full flex items-center justify-end ${t.textMain}`}>
                   {item.price < 1 ? item.price.toFixed(5) : item.price.toFixed(2)}
                 </div>
                 
