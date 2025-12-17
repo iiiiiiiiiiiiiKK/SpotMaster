@@ -75,7 +75,8 @@ const calcBOLL = (p, n, k) => {
   return { up: sma + k * sd, low: sma - k * sd };
 };
 
-export default function FileB() {
+// 【修改点 1】: 接收 onClose 属性
+export default function FileB({ onClose }) {
   // --- 状态管理 ---
   const [user, setUser] = useState(null);
   const [statusMsg, setStatusMsg] = useState("> System Ready. V43 Online.");
@@ -952,7 +953,9 @@ export default function FileB() {
               </div>
           </div>
           <div className="header-right">
-              {/* Removed Screenshot Button */}
+              <div className="header-top-buttons">
+                  {/* Removed Screenshot Button from here */}
+              </div>
               <div className="price-row-controls">
                   <select id="tokenSelect" value={token} onChange={(e)=>setToken(e.target.value)}>
                       {Object.keys(CG_MAP).map(t => <option key={t} value={t}>{t}</option>)}
@@ -1268,6 +1271,8 @@ export default function FileB() {
               <button className="d-btn" onClick={()=>setShowTgModal(true)}><i>⚙️</i></button>
               {/* Removed TG Send Button */}
               <button className="d-btn" onClick={()=>setSource(prev => prev==='binance'?'okx':(prev==='okx'?'gecko':'binance'))}><i>🔄</i></button>
+              {/* Close Button (X Icon) */}
+              <button className="d-btn" onClick={onClose} style={{color: 'var(--dan)'}}><i>✕</i></button>
           </div>
       </div>
       <input type="file" id="ocrInput" style={{display:'none'}} accept="image/*" onChange={(e)=>runOCR(e.target.files[0])} />
