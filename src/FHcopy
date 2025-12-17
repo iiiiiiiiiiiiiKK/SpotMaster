@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, onSnapshot, setDoc, collection } from 'firebase/firestore';
 
 // --- 全局配置 ---
 const APP_ID = typeof window.__app_id !== 'undefined' ? window.__app_id : 'v42-terminal-demo';
@@ -13,7 +13,7 @@ const HL_API_URL = 'https://api.hyperliquid.xyz/info';
 const CG_MAP = { 'ETH':'ethereum','BTC':'bitcoin','SOL':'solana','BNB':'binancecoin','DOGE':'dogecoin','XRP':'ripple', 'PEPE':'pepe','ORDI':'ordi','SATS':'sats-ordinals','WIF':'dogwifhat','BONK':'bonk' };
 
 // --- Firebase 初始化 (安全模式) ---
-// 既然 App5 可能已经初始化了 Firebase，我们需要检查是否已存在 App 实例，避免重复初始化报错
+// 检查是否已存在 App 实例，避免重复初始化报错
 let db, auth;
 try {
     const localConfig = localStorage.getItem('cht_v42_firebase_config');
@@ -128,12 +128,8 @@ export default function FileB() {
   const [topAssets, setTopAssets] = useState([]);
 
   // 系统与云同步
-  const [lastTgUpdateId, setLastTgUpdateId] = useState(0);
   const [lastAnalysisTime, setLastAnalysisTime] = useState({'1h':0, '4h':0, '1d':0});
-  const [cloudKey, setCloudKey] = useState("");
   const [isSyncing, setIsSyncing] = useState(false);
-  const [tgToken, setTgToken] = useState("");
-  const [tgChatId, setTgChatId] = useState("");
   const [useProxy, setUseProxy] = useState(true);
   const [firebaseConfigInput, setFirebaseConfigInput] = useState("");
   
@@ -233,56 +229,56 @@ export default function FileB() {
     return () => unsubAuth();
   }, []);
 
-  // Cloud Sync Load
+  // Cloud Sync Load (User Data)
   useEffect(() => {
-    if (!user || !db || !cloudKey) return;
-    // 使用终端特定的路径，避免与 App5 的 user_data 冲突
-    const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'terminals', cloudKey);
+    if (!user || !db) return;
+    
+    // 使用 strict path rule: /artifacts/{appId}/users/{userId}/{collectionName}/{docId}
+    const docRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'data', 'file_b_settings');
+    
     const unsub = onSnapshot(docRef, (snap) => {
       if (snap.exists()) {
         const d = snap.data();
         setIsSyncing(true);
-        if (d.lP) setLPrice(d.lP);
-        if (d.lS) setLSize(d.lS);
-        if (d.sP) setSPrice(d.sP);
-        if (d.sS) setSSize(d.sS);
-        if (d.w) setWallet(d.w);
-        if (d.lev) setLev(d.lev);
+        if (d.lP !== undefined) setLPrice(d.lP);
+        if (d.lS !== undefined) setLSize(d.lS);
+        if (d.sP !== undefined) setSPrice(d.sP);
+        if (d.sS !== undefined) setSSize(d.sS);
+        if (d.w !== undefined) setWallet(d.w);
+        if (d.lev !== undefined) setLev(d.lev);
         if (d.t && d.t !== token) setToken(d.t);
         if (d.src) setSource(d.src);
         if (d.th) setTheme(d.th);
-        if (d.tt) setTgToken(d.tt);
-        if (d.tc) setTgChatId(d.tc);
         if (d.wA) setWhaleAddresses(d.wA);
         if (d.cS) setCustomSources(d.cS);
         setIsSyncing(false);
       }
     }, (err) => {
-      logAI("Cloud Sync Error", "c-dan");
+      logAI("Sync Error", "c-dan");
       console.error(err);
     });
     return () => unsub();
-  }, [user, cloudKey]);
+  }, [user]);
 
-  // Local Storage Save & Cloud Push
+  // Cloud Save & Local Storage Logic
   useEffect(() => {
     const saveData = {
       lP: lPrice, lS: lSize, sP: sPrice, sS: sSize, w: wallet, lev,
       t: token, src: source, th: theme, px: useProxy,
-      tt: tgToken, tc: tgChatId,
-      lp: price, wA: whaleAddresses, cS: customSources,
-      lT: lastTgUpdateId, lAT: lastAnalysisTime,
-      ck: cloudKey
+      wA: whaleAddresses, cS: customSources,
+      lAT: lastAnalysisTime
     };
+    // 仍然保留本地存储作为备份，以便快速加载
     localStorage.setItem('cht_v42', JSON.stringify(saveData));
     
-    if (user && db && cloudKey && !isSyncing) {
-       const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'terminals', cloudKey);
+    // 自动保存到 Firebase
+    if (user && db && !isSyncing) {
+       const docRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'data', 'file_b_settings');
        setDoc(docRef, saveData, { merge: true }).catch(e => console.error("Cloud push failed", e));
     }
-  }, [lPrice, lSize, sPrice, sSize, wallet, lev, token, source, theme, useProxy, tgToken, tgChatId, price, whaleAddresses, customSources, lastTgUpdateId, lastAnalysisTime, cloudKey, user, isSyncing]);
+  }, [lPrice, lSize, sPrice, sSize, wallet, lev, token, source, theme, useProxy, whaleAddresses, customSources, lastAnalysisTime, user, isSyncing]);
 
-  // Initial Load
+  // Initial Load (Local backup)
   useEffect(() => {
     try {
       const d = JSON.parse(localStorage.getItem('cht_v42'));
@@ -292,11 +288,8 @@ export default function FileB() {
         if(d.t) setToken(d.t); if(d.src) setSource(d.src);
         if(d.th) setTheme(d.th); 
         if(d.px !== undefined) setUseProxy(d.px);
-        if(d.tt) setTgToken(d.tt); if(d.tc) setTgChatId(d.tc);
-        if(d.ck) setCloudKey(d.ck);
         if(d.wA) setWhaleAddresses(d.wA);
         if(d.cS) setCustomSources(d.cS);
-        if(d.lT) setLastTgUpdateId(d.lT);
         if(d.lAT) setLastAnalysisTime(d.lAT);
       }
       const fbConfig = localStorage.getItem('cht_v42_firebase_config');
@@ -311,9 +304,6 @@ export default function FileB() {
   }, []);
 
   useEffect(() => {
-    // Only apply theme to body if active? Ideally we should scope styles, but adhering to original logic:
-    // This allows FileB to override theme. When hidden, we might need to reset, 
-    // but in this setup FileB is just an overlay or separate view.
     document.body.className = theme === 'dark' ? '' : theme + '-mode';
   }, [theme]);
 
@@ -393,10 +383,9 @@ export default function FileB() {
   useEffect(() => {
     const macroInt = setInterval(fetchRealMacro, 60000);
     const whaleInt = setInterval(() => { refreshWhaleData(); }, 60000);
-    const tgInt = setInterval(checkTgUpdates, 10000);
     const aiInt = setInterval(checkScheduledAnalysis, 60000);
     refreshWhaleData();
-    return () => { clearInterval(macroInt); clearInterval(whaleInt); clearInterval(tgInt); clearInterval(aiInt); };
+    return () => { clearInterval(macroInt); clearInterval(whaleInt); clearInterval(aiInt); };
   }, [whaleAddresses, token]);
 
   // --- World Assets Data Init ---
@@ -606,7 +595,7 @@ export default function FileB() {
              const prev = whaleCache[w.address] || [];
              w.data.assetPositions.forEach(cp => {
                  const isNew = !prev.find(pp => pp.position.coin === cp.position.coin);
-                 if(isNew) sendTG(`🚨 Whale Alert: ${w.name} Opened ${cp.position.coin}`);
+                 // REMOVED TG ALERT
              });
           }
       });
@@ -718,7 +707,9 @@ export default function FileB() {
       if(m===0 && h%4===0 && (Date.now()-lastAnalysisTime['4h']) >= 12600000) triggerAP('4h');
       if(h===8 && m===0 && (Date.now()-lastAnalysisTime['1d']) >= 82800000) triggerAP('1d');
   }
-  async function triggerAP(tf) { setLastAnalysisTime({...lastAnalysisTime, [tf]: Date.now()}); const res = await getAnalysisData(tf); if(res.summary) sendTG(`🤖 V42 Deep Scan\n\n${res.summary}`); }
+  async function triggerAP(tf) { setLastAnalysisTime({...lastAnalysisTime, [tf]: Date.now()}); const res = await getAnalysisData(tf); 
+    // REMOVED TG SEND
+  }
 
   function reloadNews() {
       setNews([]); 
@@ -758,38 +749,6 @@ export default function FileB() {
     else if (retPeriod === 'D') { const days = new Date(retYear, retMonth, 0).getDate(); headers = Array.from({ length: days }, (_, i) => `${i + 1}日`); rows = [{ label: `${retYear}/${retMonth}`, cells: headers.map(() => mockCell(-4, 10)) }]; }
     setRetData({ headers, rows });
   }
-
-  async function sendTG(msg) {
-      if(!tgToken || !tgChatId) { 
-        if(!tgToken) logAI("TG Config Missing. Check Settings.", "c-warn");
-        return; 
-      }
-      let u = `https://api.telegram.org/bot${tgToken}/sendMessage?chat_id=${tgChatId}&text=${encodeURIComponent(msg)}&parse_mode=HTML`;
-      if(useProxy) u = PROXY + encodeURIComponent(u);
-      try { await fetch(u); logAI("TG Sent.", "c-safe"); } catch(e) { logAI("TG Fail", "c-dan"); }
-  }
-
-  async function checkTgUpdates() {
-      if(!tgToken || !tgChatId) return;
-      let url = `https://api.telegram.org/bot${tgToken}/getUpdates?offset=${lastTgUpdateId + 1}`;
-      if (useProxy) url = PROXY + encodeURIComponent(url);
-      try {
-          const res = await fetch(url).then(r => r.json());
-          if (res.result && res.result.length > 0) {
-              res.result.forEach(u => {
-                  setLastTgUpdateId(u.update_id);
-                  if (u.message && u.message.text) {
-                      const txt = u.message.text.trim();
-                      const match = txt.match(/^(0x[a-fA-F0-9]{40})(\s*\[(.*?)\])?$/i);
-                      if(match && !whaleAddresses.find(w => w.address === match[1])) {
-                          setWhaleAddresses(prev => [...prev, {address: match[1], name: match[3]||''}]);
-                          logAI(`New whale: ${match[1].substring(0,6)}`, 'c-pri');
-                      }
-                  }
-              });
-          }
-      } catch(e) {}
-  }
   
   async function runOCR(file) {
       if(!file || !window.Tesseract) return;
@@ -800,17 +759,6 @@ export default function FileB() {
           const sM = [...t.matchAll(/(?:数量|Size)[^\d]*(\d+\.?\d*)/gi)]; const pM = [...t.matchAll(/(?:价格|Price|Entry)[^\d]*(\d+\.?\d*)/gi)];
           if(sM.length && pM.length) { setLSize(sM[0][1]); setLPrice(pM[0][1]); if(sM[1]) setSSize(sM[1][1]); if(pM[1]) setSPrice(pM[1][1]); logAI("OCR Done.", "c-safe"); }
       } catch(e) { logAI("OCR Fail.", "c-dan"); }
-  }
-
-  function captureScreenshot() {
-      if (!window.html2canvas) return;
-      const dock = document.querySelector('.bottom-fix'); const ssBtn = document.querySelector('.header-top-buttons');
-      if(dock) dock.style.display='none'; if(ssBtn) ssBtn.style.display='none';
-      window.html2canvas(document.body, { useCORS: true }).then(canvas => {
-          if(dock) dock.style.display='block'; if(ssBtn) ssBtn.style.display='flex';
-          const link = document.createElement('a'); link.download = `Screen_${Date.now()}.png`; link.href = canvas.toDataURL(); link.click();
-          logAI("Saved.", "c-safe");
-      });
   }
 
   function captureElement(id, name) {
@@ -1004,9 +952,7 @@ export default function FileB() {
               </div>
           </div>
           <div className="header-right">
-              <div className="header-top-buttons">
-                  <button className="screenshot-btn" onClick={captureScreenshot} title="Capture Full Screenshot">📝</button>
-              </div>
+              {/* Removed Screenshot Button */}
               <div className="price-row-controls">
                   <select id="tokenSelect" value={token} onChange={(e)=>setToken(e.target.value)}>
                       {Object.keys(CG_MAP).map(t => <option key={t} value={t}>{t}</option>)}
@@ -1320,23 +1266,18 @@ export default function FileB() {
           <div className="dock">
               <button className="d-btn" onClick={()=>document.getElementById('ocrInput').click()}><i>📷</i></button>
               <button className="d-btn" onClick={()=>setShowTgModal(true)}><i>⚙️</i></button>
-              <button className="d-btn" onClick={()=>sendTG(`📊 V42 Report\nPrice: ${price.toFixed(2)}\nPnL: ${calculated.netPnl}`)}><i>📡</i></button>
+              {/* Removed TG Send Button */}
               <button className="d-btn" onClick={()=>setSource(prev => prev==='binance'?'okx':(prev==='okx'?'gecko':'binance'))}><i>🔄</i></button>
           </div>
       </div>
       <input type="file" id="ocrInput" style={{display:'none'}} accept="image/*" onChange={(e)=>runOCR(e.target.files[0])} />
 
-      {/* TG Config Modal */}
+      {/* Settings Modal (Simplified) */}
       <div className={`modal-mask ${showTgModal?'show':''}`}>
           <div className="modal-body">
               <div className="flex j-between mb-2"><span className="bold c-pri">System Config</span><span onClick={()=>setShowTgModal(false)} className="pointer">✕</span></div>
               
-              <div className="c-dim mb-1" style={{fontSize:10}}>CLOUD SYNC (Secret Key)</div>
-              <input className="modal-input" placeholder="Secret Key" style={{borderColor:'var(--safe)'}} value={cloudKey} onChange={(e)=>setCloudKey(e.target.value)} />
-              
-              <div className="c-dim mb-1" style={{fontSize:10}}>TELEGRAM BOT</div>
-              <input className="modal-input" placeholder="Bot Token" value={tgToken} onChange={(e)=>setTgToken(e.target.value)} />
-              <input className="modal-input" placeholder="Chat ID" value={tgChatId} onChange={(e)=>setTgChatId(e.target.value)} />
+              {/* Removed Cloud Sync & TG Config Inputs */}
               
               <div className="c-dim mb-1" style={{fontSize:10}}>FIREBASE CONFIG (JSON)</div>
               <textarea 
@@ -1350,10 +1291,9 @@ export default function FileB() {
               <div className="flex a-center gap-2 mb-2 c-dim" style={{fontSize:11}} onClick={()=>setUseProxy(!useProxy)}>
                   <div style={{width:32,height:16,background:'var(--input-border)',borderRadius:8,position:'relative'}}>
                       <div style={{width:12,height:12,background:'#fff',borderRadius:'50%',position:'absolute',top:2,left:useProxy?18:2,transition:'0.3s'}}></div>
-                  </div><span>CORS Proxy (Telegram & Whale)</span>
+                  </div><span>CORS Proxy (Whale)</span>
               </div>
               
-              <button onClick={()=>sendTG("Test V42")} style={{width:'100%',padding:10,background:'rgba(255,255,255,0.1)',border:'none',borderRadius:4,fontWeight:'bold',marginBottom:8, color:'#fff'}}>TEST TG</button>
               <button onClick={saveSystemConfig} style={{width:'100%',padding:10,background:'var(--pri)',color:'#000',border:'none',borderRadius:4, fontWeight:'bold'}}>SAVE & APPLY</button>
           </div>
       </div>
