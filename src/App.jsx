@@ -1943,7 +1943,7 @@ export default function PixelTraderV34_PriceBoard() {
               
               {/* NEW FILE B BUTTON */}
               <button onClick={() => setShowFileB(true)} className={`pixel-btn px-3 py-1 text-[10px] font-bold ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
-                <Layout size={12} className="mr-1"/> FileB
+                <Layout size={12} className="mr-1"/> Hedge
               </button>
            </div>
 
