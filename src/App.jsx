@@ -1769,8 +1769,6 @@ export default function PixelTraderV34_PriceBoard() {
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col items-center justify-center p-8">
              {/* TODO: 位置 2 - 将来在这里替换成 <FileB /> 组件 */}
-             <div className={`p-8 rounded-lg border-2 border-dashed flex flex-col items-center gap-4 ${isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-200/50'}`}>
-                <Loader2 size={48} className="animate-spin opacity-50"/>
           <FileB /> */}
                 {showContent && <FileB />}
                </div>
