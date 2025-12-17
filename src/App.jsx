@@ -49,8 +49,12 @@ import {
   Hash,
   Bot,
   BarChart3,
-  ArrowUpDown
+  ArrowUpDown,
+  Layout // Added for the new button icon
 } from 'lucide-react';
+
+// TODO: 位置 1 - 将来在这里导入 FileB 组件
+// import FileB from './FileB';
 
 /* =========================================
    PART 1: BINANCE PRICE PANEL CORE (Ported)
@@ -1064,6 +1068,9 @@ export default function PixelTraderV34_PriceBoard() {
   const [importText, setImportText] = useState(''); 
   const [importPreview, setImportPreview] = useState(null); 
   
+  // NEW STATE: Control FileB display
+  const [showFileB, setShowFileB] = useState(false);
+
   const [txForm, setTxForm] = useState({ 
     type: 'BUY', 
     price: '', 
@@ -1746,6 +1753,30 @@ export default function PixelTraderV34_PriceBoard() {
       {/* --- PRICE PANEL OVERLAY --- */}
       {showPricePanel && <PricePanel isDarkMode={isDarkMode} onClose={() => setShowPricePanel(false)} />}
       
+      {/* --- NEW FILE B OVERLAY (Placeholder) --- */}
+      {showFileB && (
+        <div className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-100 text-gray-900'} animate-in slide-in-from-bottom-10`}>
+          {/* Header */}
+          <div className={`flex items-center justify-between px-4 py-3 border-b-4 flex-shrink-0 ${isDarkMode ? 'bg-slate-900 border-green-500' : 'bg-white border-gray-900'}`}>
+            <div className="flex items-center gap-2">
+               <span className="font-black text-xl tracking-tight">FILE B</span>
+            </div>
+            <button onClick={() => setShowFileB(false)} className={`pixel-btn w-8 h-8 flex items-center justify-center ${isDarkMode ? 'bg-slate-900 border-green-600 text-green-400' : 'bg-white border-gray-900 text-gray-900'}`}>
+               <X size={18}/>
+            </button>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col items-center justify-center p-8">
+             {/* TODO: 位置 2 - 将来在这里替换成 <FileB /> 组件 */}
+             <div className={`p-8 rounded-lg border-2 border-dashed flex flex-col items-center gap-4 ${isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-200/50'}`}>
+                <Loader2 size={48} className="animate-spin opacity-50"/>
+                <div className="text-xl font-bold opacity-70">功能加载中...</div>
+             </div>
+          </div>
+        </div>
+      )}
+      
       <div className="w-full max-w-2xl space-y-6 pb-20">
         
         {/* === Header === */}
@@ -1915,9 +1946,16 @@ export default function PixelTraderV34_PriceBoard() {
         {/* Action Bar: Add & Sort */}
         <div className="flex justify-between items-center mb-4">
            {/* New Left-aligned ADD Button */}
-           <button onClick={() => setIsAddingNewCoin(true)} className={`pixel-btn px-3 py-1 text-[10px] font-bold ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
-             <Plus size={12} className="mr-1"/> ADD
-           </button>
+           <div className="flex gap-2">
+              <button onClick={() => setIsAddingNewCoin(true)} className={`pixel-btn px-3 py-1 text-[10px] font-bold ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                <Plus size={12} className="mr-1"/> ADD
+              </button>
+              
+              {/* NEW FILE B BUTTON */}
+              <button onClick={() => setShowFileB(true)} className={`pixel-btn px-3 py-1 text-[10px] font-bold ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
+                <Layout size={12} className="mr-1"/> FileB
+              </button>
+           </div>
 
            <div className="flex gap-2">
               <button onClick={() => setSortMode('value')} className={`text-[10px] font-bold px-2 py-1 rounded border-2 border-transparent ${sortMode==='value' ? 'bg-black text-white border-black dark:bg-gray-100 dark:text-black' : 'opacity-50 hover:opacity-100'}`}>VALUE</button>
@@ -2378,3 +2416,5 @@ export default function PixelTraderV34_PriceBoard() {
     </div>
   );
 }
+
+
