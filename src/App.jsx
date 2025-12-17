@@ -1756,21 +1756,13 @@ export default function PixelTraderV34_PriceBoard() {
       {/* --- NEW FILE B OVERLAY (Updated) --- */}
       {showFileB && (
         <div className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-100 text-gray-900'} animate-in slide-in-from-bottom-10`}>
-          {/* 【修改点 3】 悬浮关闭按钮，不遮挡 FileB 自己的 Header */}
-          <div className="absolute top-4 right-4 z-[300]">
-            <button 
-              onClick={() => setShowFileB(false)} 
-              className={`pixel-btn w-8 h-8 flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-red-900/80 border-red-500 text-white' : 'bg-red-100 border-red-500 text-red-900'}`}
-              title="Close FileB"
-            >
-               <X size={18}/>
-            </button>
-          </div>
-
+          {/* 【修改点 3】 移除了悬浮的关闭按钮 */}
+          
           {/* Main Content Area - Full Screen for FileB */}
           {/* Changed overflow-hidden to overflow-y-auto and added padding-bottom to ensure scrolling works and content isn't hidden behind FileB's fixed dock */}
           <div className="flex-1 w-full h-full overflow-y-auto relative p-3 pb-32">
-             <FileB />
+             {/* 【修改点 2】 传递 onClose 函数 */}
+             <FileB onClose={() => setShowFileB(false)} />
           </div>
         </div>
       )}
@@ -1951,7 +1943,7 @@ export default function PixelTraderV34_PriceBoard() {
               
               {/* NEW FILE B BUTTON */}
               <button onClick={() => setShowFileB(true)} className={`pixel-btn px-3 py-1 text-[10px] font-bold ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}>
-                <Layout size={12} className="mr-1"/> Fully Hedged
+                <Layout size={12} className="mr-1"/> FileB
               </button>
            </div>
 
