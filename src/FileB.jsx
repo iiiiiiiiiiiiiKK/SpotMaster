@@ -1272,7 +1272,7 @@ export default function FileB({ onClose }) {
               {/* Removed TG Send Button */}
               <button className="d-btn" onClick={()=>setSource(prev => prev==='binance'?'okx':(prev==='okx'?'gecko':'binance'))}><i>🔄</i></button>
               {/* Close Button (X Icon) */}
-              <button className="d-btn" onClick={onClose} style={{color: 'var(--dan)'}}><i>✕</i></button>
+              <button className="d-btn" onClick={onClose} style={{color: 'var(--dan)'}}><i>🫆</i></button>
           </div>
       </div>
       <input type="file" id="ocrInput" style={{display:'none'}} accept="image/*" onChange={(e)=>runOCR(e.target.files[0])} />
