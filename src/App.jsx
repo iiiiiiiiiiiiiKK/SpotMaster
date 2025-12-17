@@ -1068,8 +1068,8 @@ export default function PixelTraderV34_PriceBoard() {
   const [importText, setImportText] = useState(''); 
   const [importPreview, setImportPreview] = useState(null); 
   
-  // NEW STATE: Control FileB display
-  const [showFileB, setShowFileB] = useState(false);
+  // NEW STATE: Control  display
+  const [show, setShow] = useState(false);
 
   const [txForm, setTxForm] = useState({ 
     type: 'BUY', 
@@ -1754,14 +1754,14 @@ export default function PixelTraderV34_PriceBoard() {
       {showPricePanel && <PricePanel isDarkMode={isDarkMode} onClose={() => setShowPricePanel(false)} />}
       
       {/* --- NEW FILE B OVERLAY (Placeholder) --- */}
-      {showFileB && (
+      {show && (
         <div className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-100 text-gray-900'} animate-in slide-in-from-bottom-10`}>
           {/* Header */}
           <div className={`flex items-center justify-between px-4 py-3 border-b-4 flex-shrink-0 ${isDarkMode ? 'bg-slate-900 border-green-500' : 'bg-white border-gray-900'}`}>
             <div className="flex items-center gap-2">
                <span className="font-black text-xl tracking-tight">FILE B</span>
             </div>
-            <button onClick={() => setShowFileB(false)} className={`pixel-btn w-8 h-8 flex items-center justify-center ${isDarkMode ? 'bg-slate-900 border-green-600 text-green-400' : 'bg-white border-gray-900 text-gray-900'}`}>
+            <button onClick={() => setShow(false)} className={`pixel-btn w-8 h-8 flex items-center justify-center ${isDarkMode ? 'bg-slate-900 border-green-600 text-green-400' : 'bg-white border-gray-900 text-gray-900'}`}>
                <X size={18}/>
             </button>
           </div>
@@ -1771,7 +1771,9 @@ export default function PixelTraderV34_PriceBoard() {
              {/* TODO: 位置 2 - 将来在这里替换成 <FileB /> 组件 */}
              <div className={`p-8 rounded-lg border-2 border-dashed flex flex-col items-center gap-4 ${isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-200/50'}`}>
                 <Loader2 size={48} className="animate-spin opacity-50"/>
-                {showContent && <FileB />} 
+          <FileB /> */}
+                {showContent && <FileB />}
+               </div>
              </div>
           </div>
         </div>
