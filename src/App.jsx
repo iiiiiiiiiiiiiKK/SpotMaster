@@ -50,11 +50,11 @@ import {
   Bot,
   BarChart3,
   ArrowUpDown,
-  Layout // Added for the new button icon
+  Layout 
 } from 'lucide-react';
 
-// TODO: 位置 1 - 将来在这里导入 FileB 组件
-// import FileB from './FileB';
+// 【修改点 1】：引入 FileB 组件
+import FileB from './FileB';
 
 /* =========================================
    PART 1: BINANCE PRICE PANEL CORE (Ported)
@@ -1753,26 +1753,24 @@ export default function PixelTraderV34_PriceBoard() {
       {/* --- PRICE PANEL OVERLAY --- */}
       {showPricePanel && <PricePanel isDarkMode={isDarkMode} onClose={() => setShowPricePanel(false)} />}
       
-      {/* --- NEW FILE B OVERLAY (Placeholder) --- */}
+      {/* --- NEW FILE B OVERLAY (Updated) --- */}
       {showFileB && (
         <div className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-slate-900 text-gray-100' : 'bg-gray-100 text-gray-900'} animate-in slide-in-from-bottom-10`}>
-          {/* Header */}
-          <div className={`flex items-center justify-between px-4 py-3 border-b-4 flex-shrink-0 ${isDarkMode ? 'bg-slate-900 border-green-500' : 'bg-white border-gray-900'}`}>
-            <div className="flex items-center gap-2">
-               <span className="font-black text-xl tracking-tight">FILE B</span>
-            </div>
-            <button onClick={() => setShowFileB(false)} className={`pixel-btn w-8 h-8 flex items-center justify-center ${isDarkMode ? 'bg-slate-900 border-green-600 text-green-400' : 'bg-white border-gray-900 text-gray-900'}`}>
+          {/* 【修改点 3】 悬浮关闭按钮，不遮挡 FileB 自己的 Header */}
+          <div className="absolute top-4 right-4 z-[300]">
+            <button 
+              onClick={() => setShowFileB(false)} 
+              className={`pixel-btn w-8 h-8 flex items-center justify-center shadow-lg ${isDarkMode ? 'bg-red-900/80 border-red-500 text-white' : 'bg-red-100 border-red-500 text-red-900'}`}
+              title="Close FileB"
+            >
                <X size={18}/>
             </button>
           </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col items-center justify-center p-8">
-             {/* TODO: 位置 2 - 将来在这里替换成 <FileB /> 组件 */}
-             <div className={`p-8 rounded-lg border-2 border-dashed flex flex-col items-center gap-4 ${isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-200/50'}`}>
-                <Loader2 size={48} className="animate-spin opacity-50"/>
-                <div <FileB /> */}{showContent && <FileB />} </div>
-             </div>
+          {/* Main Content Area - Full Screen for FileB */}
+          {/* Changed overflow-hidden to overflow-y-auto and added padding-bottom to ensure scrolling works and content isn't hidden behind FileB's fixed dock */}
+          <div className="flex-1 w-full h-full overflow-y-auto relative p-3 pb-32">
+             <FileB />
           </div>
         </div>
       )}
